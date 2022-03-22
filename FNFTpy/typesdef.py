@@ -193,3 +193,32 @@ class NsevInverseOptionsStruct(GenericOptionsStruct):
         ("discspec_type", ctypes_int),
         ("max_iter", ctypes_uint),
         ("oversampling_factor", ctypes_uint)]
+
+
+class ManakovvOptionsStruct(GenericOptionsStruct):
+    """Ctypes options struct for interfacing fnft_manakovv.
+
+    Fields:
+
+    * bound_state_filtering
+    * bound_state_localization
+    * Dsub
+    * niter
+    * discspec_type
+    * contspec_type
+    * normalization_flag
+    * discretization
+    * richardson_extrapolation_flag
+
+
+        """
+    _fields_ = [
+        ("bound_state_filtering", ctypes_int),
+        ("bound_state_localization", ctypes_int),
+        ("niter", ctypes_uint),
+        ("Dsub", ctypes_uint),
+        ("discspec_type", ctypes_int),
+        ("contspec_type", ctypes_int),
+        ("normalization_flag", ctypes_int32),
+        ("discretization", ctypes_int),
+        ("richardson_extrapolation_flag", ctypes_int)]

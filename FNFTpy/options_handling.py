@@ -496,3 +496,127 @@ def get_nsev_inverse_options(dis=None, cst=None, csim=None, dst=None, max_iter=N
     if osf is not None:
         options.oversampling_factor = osf
     return options
+
+
+## Manakov
+
+
+def fnft_manakovv_default_options_wrapper():
+    """Get the default options for manakovv directly from the FNFT C-library.
+
+    Returns:
+
+    * options : ManakovvOptionsStruct with options for manakovv_wrapper
+
+    """
+
+    fnft_clib = ctypes.CDLL(get_lib_path(), winmode = get_winmode_param())
+    clib_func = fnft_clib.fnft_manakovv_default_opts
+    clib_func.restype = ManakovvOptionsStruct
+    clib_func.argtpes = []
+    return clib_func()
+
+
+def print_manakovv_options(options=None):
+    """Print options of a ManakovvOptionsStruct.
+
+    When called without additional argument, the default options from FNFT are printed.
+
+    Optional arguments:
+
+    * options : ManakovvOptionsStruct, e.g. created by get_manakovv_options()
+
+    """
+
+    if options is None:
+        options = fnft_manakovv_default_options_wrapper()
+    print("manakovv options:")
+    print(options)
+
+
+def get_manakovv_options(bsf=None, bsl=None, niter=None, Dsub=None, dst=None, cst=None, nf=None, dis=None, ref=None):
+    """Get a ManakovvOptionsStruct for use with manakovv_wrapper.
+
+    When called without additional optional arguments, the default values from FNFT are used.
+
+    Optional arguments:
+
+    * bsf : bound state filtering, default = 2
+
+        * 0 = none
+        * 1 = basic
+        * 2 = full
+
+    * bsl : bound state localization, default = 2
+
+        * 0 = fast eigenvalue
+        * 1 = Newton
+        * 2 = subsample and refine
+
+    * niter : number of iterations for Newton bound state location, default = 10
+    * Dsub : number of samples used for 'subsampling and refine'-method, default = 0 (auto)
+    * dst : type of discrete spectrum, default = 0
+
+        * 0 = norming constants
+        * 1 = residues
+        * 2 = both
+        * 3 = skip computing discrete spectrum
+
+    * cst : type of continuous spectrum, default = 0
+
+        * 0 = reflection coefficients
+        * 1 = a and b's
+        * 2 = both
+        * 3 = skip computing continuous spectrum
+
+    * dis : discretization, default = 11
+
+         * 0 = 2SPLIT3A
+         * 1 = 2SPLIT3B
+         * 2 = 2SPLIT4A
+         * 3 = 2SPLIT4B
+         * 4 = 2SPLIT6B
+         * 5 = 4SPLIT4A
+         * 6 = 4SPLIT4B
+         * 7 = 4SPLIT6B
+         * 8 = FTES4_4A
+         * 9 = FTES4_4B
+         * 10 = FTES4_suzuki
+         * 11 = CF4_2
+         * 12 = BO
+
+    * nf : normalization flag, default =  1
+
+        * 0 = off
+        * 1 = on
+
+    * ref : richardson extrapolation flag, default = 0
+
+        * 0 = off
+        * 1 = on
+
+    Returns:
+
+    * options : ManakovvOptionsStruct
+
+    """
+    options = fnft_manakovv_default_options_wrapper()
+    if bsf is not None:
+        options.bound_state_filtering = bsf
+    if bsl is not None:
+        options.bound_state_localization = bsl
+    if niter is not None:
+        options.niter = niter
+    if Dsub is not None:
+        options.Dsub = Dsub
+    if dst is not None:
+        options.discspec_type = dst
+    if cst is not None:
+        options.contspec_type = cst
+    if nf is not None:
+        options.normalization_flag = nf
+    if dis is not None:
+        options.discretization = dis
+    if ref is not None:
+        options.richardson_extrapolation_flag = ref
+    return options
